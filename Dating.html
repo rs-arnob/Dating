@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Will you go on a date with me?</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  h1 {
+    color: #4a2c2a;
+    font-size: 2rem;
+    margin-bottom: 40px;
+    padding: 0 20px;
+  }
+
+  .buttons {
+    position: relative;
+    display: flex;
+    gap: 30px;
+  }
+
+  button {
+    padding: 15px 35px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+
+  #yesBtn {
+    background: #ff6b81;
+    color: white;
+    font-weight: bold;
+  }
+
+  #yesBtn:hover {
+    transform: scale(1.1);
+  }
+
+  #noBtn {
+    background: #ccc;
+    color: #333;
+    position: relative;
+  }
+
+  #message {
+    margin-top: 30px;
+    font-size: 1.5rem;
+    color: #4a2c2a;
+    font-weight: bold;
+    display: none;
+  }
+
+  .emoji {
+    font-size: 3rem;
+    margin-top: 10px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+  <h1 id="question">Would you like to go on a date with me? 🐵</h1>
+
+  <div class="buttons">
+    <button id="yesBtn" onclick="sayYes()">Yes 🥺</button>
+    <button id="noBtn">No</button>
+  </div>
+
+  <div id="message"></div>
+  <div class="emoji" id="emoji">😭💝</div>
+
+<script>
+  const noBtn = document.getElementById('noBtn');
+  const yesBtn = document.getElementById('yesBtn');
+
+  // Move the "No" button away whenever the cursor gets close
+  function moveNoButton() {
+    const btnWidth = noBtn.offsetWidth;
+    const btnHeight = noBtn.offsetHeight;
+
+    const maxX = window.innerWidth - btnWidth - 20;
+    const maxY = window.innerHeight - btnHeight - 20;
+
+    const newX = Math.random() * maxX;
+    const newY = Math.random() * maxY;
+
+    noBtn.style.position = 'fixed';
+    noBtn.style.left = newX + 'px';
+    noBtn.style.top = newY + 'px';
+  }
+
+  noBtn.addEventListener('mouseover', moveNoButton);
+  noBtn.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    moveNoButton();
+  });
+
+  function spawnBurst() {
+    const emojis = ['🌹', '🌸', '🍒', '💖', '💗'];
+    const container = document.body;
+
+    for (let i = 0; i < 40; i++) {
+      const el = document.createElement('div');
+      el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+      el.style.position = 'fixed';
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.top = '100vh';
+      el.style.fontSize = (1.5 + Math.random() * 2) + 'rem';
+      el.style.opacity = '1';
+      el.style.pointerEvents = 'none';
+      el.style.transition = `transform ${5 + Math.random() * 3}s ease-out, opacity ${5 + Math.random() * 3}s ease-out`;
+      container.appendChild(el);
+
+      // trigger animation on next frame
+      requestAnimationFrame(() => {
+        el.style.transform = `translateY(-${100 + Math.random() * 20}vh) rotate(${Math.random() * 360}deg)`;
+        el.style.opacity = '0';
+      });
+
+      // clean up after animation finishes
+      setTimeout(() => el.remove(), 8500);
+    }
+  }
+
+  function celebrate() {
+    // keep spawning bursts of hearts/cherries every second for 8 seconds
+    let count = 0;
+    const totalBursts = 8;
+    const burstInterval = setInterval(() => {
+      spawnBurst();
+      count++;
+      if (count >= totalBursts) {
+        clearInterval(burstInterval);
+      }
+    }, 1000);
+  }
+
+  function sayYes() {
+    document.getElementById('question').style.display = 'none';
+    document.querySelector('.buttons').style.display = 'none';
+    const msg = document.getElementById('message');
+    msg.style.display = 'block';
+    msg.innerText = "Yayyyyyyy ! Ma'am said YES! 😇";
+    celebrate();
+    document.getElementById('emoji').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
